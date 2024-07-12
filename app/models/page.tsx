@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "antd";
-import TheoriesList from "../components/TheoriesList";
+import TheoriesList from "../components/ModelsByBranch";
 import Link from "next/link";
 
 export default function Models() {

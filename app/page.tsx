@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Row } from "antd";
-import TheoriesList from "./components/TheoriesList";
+import ModelsByBranch from "./components/ModelsByBranch";
 import EconomicAnimation from "./components/EconomicAnimation";
 
 export default function Home() {
@@ -17,9 +17,7 @@ export default function Home() {
             <EconomicAnimation />
           </Col>
         </Row>
-        <div style={{marginLeft:"5%", marginRight:"5%", marginTop:"30px"}}>
-          <TheoriesList />
-        </div>
+        <ModelsByBranch />
     </div>
 );
 }
