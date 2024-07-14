@@ -1,7 +1,8 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { Checkbox, Col, Divider, Row, Slider, Table } from "antd";
+import { Breadcrumb, Button, Checkbox, Col, Divider, Row, Slider, Table } from "antd";
 import type { CheckboxProps } from 'antd';
+import { HomeOutlined, ProjectOutlined, UserOutlined } from '@ant-design/icons';
 import MathJax from 'react-mathjax2';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
@@ -22,22 +23,22 @@ export default function Demand() {
   const containerFilter = {
     backgroundColor: "#FAFAFA", 
     width: "100%", 
-    height:"500px",
+    height:"600px",
     padding: "10px 10px"
   }
 
-  const [elasticity, setElasticity] = useState<number>(100);
+  const [elasticity, setElasticity] = useState<number>(-1);
+  let [a, setA] = useState<number>(1);
   const [data, setData] = useState<DataPoint[]>([]);
-
   const prices = [5, 4, 3, 2, 1, 0];
 
   useEffect(() => {
     const newData = prices.map((price, index) => ({
-      quantity: (price / elasticity) * 100,
+      quantity: a + (-elasticity) * price,
       price,
     }));
     setData(newData);
-  }, [elasticity]);
+  }, [elasticity, a]);
 
   const handleChange = (value: number) => {
     setElasticity(value);
@@ -45,6 +46,14 @@ export default function Demand() {
 
   const onChange = (e: any) => {
     console.log(`checked = ${e.target.checked}`);
+  };
+
+  const increaseDemand = () => {
+    setA(prevA => prevA + 1);
+  };
+
+  const decreaseDemand = () => {
+    setA(prevA => prevA - 1);
   };
   
   const columns = [
@@ -65,6 +74,27 @@ export default function Demand() {
 
   return (
     <div style={container}>
+      <Breadcrumb
+      style={{marginBottom:20}}
+        items={[
+          {
+            href: '/',
+            title: <HomeOutlined />,
+          },
+          {
+            href: '/models',
+            title: (
+              <>
+                <ProjectOutlined />
+                <span>Models</span>
+              </>
+            ),
+          },
+          {
+            title: 'Demand',
+          },
+        ]}
+      />
         <Row gutter={[16,16]}>
           <Col span={4}>
             <div style={containerFilter}>
@@ -72,7 +102,10 @@ export default function Demand() {
               <p>Model: Demand</p>
               <Divider />
               <h2>Elasticity</h2>
-              <Slider value={elasticity} onChange={handleChange} />
+              <Slider value={elasticity} onChange={handleChange} min={-10} max={0} />
+              <Divider />
+              <Button onClick={increaseDemand} style={{color:"green", width:"100%", marginBottom:10}}>Increase demand</Button>
+              <Button onClick={decreaseDemand} danger style={{width:"100%"}}>Decrease demand</Button>
               <Divider />
               <h2>Assumptions</h2>
               <Checkbox defaultChecked={true} onChange={onChange}>Homogeneous good</Checkbox>
@@ -92,11 +125,20 @@ export default function Demand() {
               <LineChart width={500} height={300} data={data}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis label="Quantity demanded" ticks={[0,10,20,30,40,50]} />
-                <YAxis dataKey="price" label="Price" ticks={[0,1,2,3,4,5]} />
+                <YAxis dataKey="quantity" label={{ value: "Price (dollars)", angle: -90, position: 'insideLeft' }} ticks={[0,1,2,3,4,5]} />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="quantity" stroke="#8884d8" />
+                <Line type="monotone" dataKey="price" stroke="#8884d8" />
               </LineChart>
+              <h2>Additional info</h2>
+              <p>If demand changes without a change in prices, the whole demand curve shifts</p>
+              <ul>
+                <li>Prices of related goods</li>
+                <li>Income</li>
+                <li>Preferences</li>
+                <li>Size of the population (market)</li>
+                <li>Expectations about the future (prices)</li>
+              </ul>
               <h2>Empirically  proven? <b>No</b></h2>
               <h2>Recommended research</h2>
               <h2>Recommended books</h2>
@@ -104,7 +146,7 @@ export default function Demand() {
               <Col span={12}>
                 <Table pagination={false} dataSource={data} columns={columns} />
                 <MathJax.Context input='ascii'>
-                  <div style={{marginBottom:20}}>
+                  <div style={{marginTop:20, marginBottom:20}}>
                       <h2>Demand function</h2>
                       <MathJax.Node>{formula}</MathJax.Node>
                       <p>Q = linear demand curve</p>

@@ -1,21 +1,25 @@
 import React from "react";
 import { Col, Row } from "antd";
-import TheoriesList from "../components/ModelsByBranch";
-import EconomicAnimation from "../components/EconomicAnimation";
+import Image from "next/image";
 
 export default function Contributors() {
 
+  const logoStyle = {
+    paddingTop: 15
+  }
+
   return (
-    <div>
-        <Row style={{marginLeft:"5%", marginRight:"5%"}}>
-          <Col style={{marginTop:"60px"}} span={12}>
-            <h1>Made by economists. For economists.</h1>
-            <h2>A list of contributing individuals and organizations</h2>
-            <p>An open-source project with the main objective to lower the threshold of learning economic models by providing interactivity.</p>
-          </Col>
-          <Col span={12}>
-            <EconomicAnimation />
-          </Col>
+    <div style={{ marginLeft: "5%", marginRight: "5%", marginTop: 60, minHeight:700}}>
+        <Row style={{ display: 'block' }}>
+          <h1>Made by economists. For economists.</h1>
+          <h2>A list of contributing individuals and organizations</h2>
+        </Row>
+        <Row>
+          <div style={logoStyle}>
+            <p style={{float:"left", marginTop:6, marginRight:5}}>The </p>
+            <Image style={{float:"left"}} alt='logo-the-inner-team' src={"/logo_the_inner_team.png"} width={100} height={50} />
+            <p style={{float:"left", marginTop:6, marginLeft:5}}> Team</p>
+          </div>
         </Row>
     </div>
 );
